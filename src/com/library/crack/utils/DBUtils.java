@@ -35,12 +35,10 @@ public class DBUtils {
         ResultSet rs = null;
         try {
             stat = conn.createStatement();
-
             String sql = "select * from books;";
-            System.out.println(sql);
             rs = stat.executeQuery(sql);
             while (rs.next()){
-                System.out.println(rs.getString("bookName"));
+                System.out.println(rs.getString("publicationTime"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
