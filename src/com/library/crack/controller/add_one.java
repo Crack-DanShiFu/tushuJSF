@@ -1,6 +1,5 @@
 package com.library.crack.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.library.crack.model.Books;
 import com.library.crack.utils.DBUtils;
 
@@ -10,24 +9,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 
-@WebServlet(name = "queryAll" ,urlPatterns={"/queryAll"})
-public class queryAll extends HttpServlet {
+@WebServlet(name = "add_one" ,urlPatterns = {"/add_one"})
+public class add_one extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         response.setHeader("Content-type", "text/html;charset=UTF-8");
         response.setCharacterEncoding("utf-8");
-        ArrayList<Books> resultList=DBUtils.getInstance().queryAll();
-        String jsonString = JSON.toJSONString(resultList);
-        PrintWriter out =null ;
-        out =response.getWriter() ;
-        out.write(jsonString);
-        out.close();
+        request.getParameter("bookName");
+        String bookName = request.getParameter("bookName");
+        String publicationTime = request.getParameter("publicationTime").toString();
+        String bookAuthor = request.getParameter("bookAuthor");
+        String bookType = request.getParameter("BookType");
+        String bookPrice = request.getParameter("bookPrice");
+        String bookDescription = request.getParameter("bookDescription");
+
+        DBUtils.getInstance().addOne(new Books(bookName, publicationTime, bookAuthor, bookType, bookPrice, bookDescription));
+
+        response.sendRedirect("/index.xhtml");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request,response);
+
     }
 }

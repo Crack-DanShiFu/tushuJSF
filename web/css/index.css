@@ -1,12 +1,25 @@
-
-body{
+body {
     width: 1140px;
     margin: auto;
 }
 
-.top-toolbar{
-    list-style: none;
+.container {
+    width: 500px;
+    margin: auto;
 }
-.top-toolbar li{
-    float: left;
+
+.container > * {
+    margin: 10px;
+}
+
+.topbar {
+    height: 50px;
+    background-color: #2b99ff;
+}
+
+.topbar p {
+    font-size: 25px;
+    color: white;
+    line-height: 50px;
+    margin-left: 20px;
 }

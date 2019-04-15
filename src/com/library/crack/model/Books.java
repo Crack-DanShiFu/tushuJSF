@@ -4,7 +4,7 @@ public class Books {
     private String bookName;
     private String publicationTime;
     private String bookAuthor;
-    private String BookType;
+    private String bookType;
     private String bookPrice;
     private String bookDescription;
 
@@ -16,7 +16,7 @@ public class Books {
         this.bookName = bookName;
         this.publicationTime = publicationTime;
         this.bookAuthor = bookAuthor;
-        BookType = bookType;
+        this.bookType = bookType;
         this.bookPrice = bookPrice;
         this.bookDescription = bookDescription;
     }
@@ -46,11 +46,11 @@ public class Books {
     }
 
     public String getBookType() {
-        return BookType;
+        return bookType;
     }
 
     public void setBookType(String bookType) {
-        BookType = bookType;
+        bookType = bookType;
     }
 
     public String getBookPrice() {

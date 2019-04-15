@@ -13,21 +13,22 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-@WebServlet(name = "queryAll" ,urlPatterns={"/queryAll"})
-public class queryAll extends HttpServlet {
+@WebServlet(name = "queryOne", urlPatterns = {"/queryOne"})
+public class queryOne extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         response.setHeader("Content-type", "text/html;charset=UTF-8");
         response.setCharacterEncoding("utf-8");
-        ArrayList<Books> resultList=DBUtils.getInstance().queryAll();
+        String bookName = request.getParameter("bookName");
+        ArrayList<Books> resultList = DBUtils.getInstance().queryOne(bookName);
         String jsonString = JSON.toJSONString(resultList);
-        PrintWriter out =null ;
-        out =response.getWriter() ;
+        PrintWriter out = null;
+        out = response.getWriter();
         out.write(jsonString);
         out.close();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request,response);
+        doPost(request, response);
     }
 }
