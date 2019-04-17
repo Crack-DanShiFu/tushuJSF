@@ -1,28 +1,61 @@
 $(window).load(function () {
+
+    //获取类别筛选的数据
     $.ajax({
         url: '/queryAll', success: function (data) {
             var data_obj = jQuery.parseJSON(data)
             //去重
             var bookTypes = new Set();
             for (i = 0; i < data_obj.length; i++) {
-                $('.table tbody').append("        <tr>\n" +
-                    "            <td>" + data_obj[i]['bookName'] + "</td>\n" +
-                    "            <td>" + data_obj[i]['bookAuthor'] + "</td>\n" +
-                    "            <td>" + data_obj[i]['bookType'] + "</td>\n" +
-                    "            <td>" + data_obj[i]['bookPrice'] + "</td>\n" +
-                    "            <td>" + data_obj[i]['publicationTime'] + "</td>\n" +
-                    "            <td><a href='/delete_one?bookName=" + data_obj[i]['bookName'] + "'>删除</a></td>\n" +
-                    "            <td><a href='/modify_one.xhtml?bookName=" + data_obj[i]['bookName'] + "'>修改</a></td>\n" +
-                    "        </tr>")
-
                 bookTypes.add(data_obj[i]['bookType'])
-
             }
             bookTypes.forEach(function (element, sameElement, set) {
                 $('.container div:first>select').append("<option>" + element + "</option>")
             });
         }
     });
+
+
+    $('#mytab').bootstrapTable({
+        method: 'POST',
+        url: "/queryAll",//请求路径
+        striped: true, //是否显示行间隔色
+        pageNumber: 1, //初始化加载第一页
+        pagination: true,//是否分页
+        sidePagination: 'client',//server:服务器端分页|client：前端分页
+        pageSize: 5,//单页记录数
+        pageList: [5, 10, 20, 30],//可选择单页记录数
+        showRefresh: true,//刷新按钮
+        columns: [{
+            title: '书名',
+            field: 'bookName',
+            sortable: true
+        }, {
+            title: '作者',
+            field: 'bookAuthor',
+            sortable: true
+        }, {
+            title: '类别',
+            field: 'bookType',
+        }, {
+            title: '价格',
+            field: 'bookPrice',
+        }, {
+            title: '出版时间',
+            field: 'publicationTime',
+        }, {
+            title: '操作    <a href="/add_one.xhtml">添加图书</a>',
+            field: 'publicationTime',
+            formatter: operation,//对资源进行操作
+        }]
+    });
+
+//删除、编辑操作
+    function operation(value, row, index) {
+        var htm = "<a href='/delete_one?bookName=" + row["bookName"] + "'>删除</a> " +
+            "<a href='/modify_one.xhtml?bookName=" + row["bookName"] + "'>修改</a>"
+        return htm;
+    }
 });
 
 function queryInfo() {
@@ -34,7 +67,8 @@ function queryInfo() {
         bookTypeSection: $('select[name="bookType-section"]').val(),
         bookPrice_section: $('select[name="bookPrice-section"]').val()
     }
-    $('.table tbody').find('tr').remove();
+    $("#mytab").bootstrapTable('removeAll');
+
     $.ajax({
         url: '/query',
         type: 'POST',
@@ -43,21 +77,33 @@ function queryInfo() {
         success: function (res) {
             var data_obj = res
             for (i = 0; i < data_obj.length; i++) {
-                $('.table tbody').append("        <tr>\n" +
-                    "            <td>" + data_obj[i]['bookName'] + "</td>\n" +
-                    "            <td>" + data_obj[i]['bookAuthor'] + "</td>\n" +
-                    "            <td>" + data_obj[i]['bookType'] + "</td>\n" +
-                    "            <td>" + data_obj[i]['bookPrice'] + "</td>\n" +
-                    "            <td>" + data_obj[i]['publicationTime'] + "</td>\n" +
-                    "            <td><a href='/delete_one?bookName=" + data_obj[i]['bookName'] + "'>删除</a></td>\n" +
-                    "            <td><a href='/modify_one.xhtml?bookName=" + data_obj[i]['bookName'] + "'>修改</a></td>\n" +
-                    "        </tr>")
+                var _data = {
+                    "bookName": data_obj[i]["bookName"],
+                    "bookAuthor": data_obj[i]["bookAuthor"],
+                    "bookType": data_obj[i]["bookType"],
+                    "bookPrice": data_obj[i]["bookPrice"],
+                    "publicationTime": data_obj[i]["publicationTime"],
+
+                }
+                $("#mytab").bootstrapTable('append', _data);
             }
+            removeAllSerech()
         },
         error: function (e) {
         }
     });
 }
+
+function removeAllSerech() {
+    $('input[name="bookName"]').val('')
+    $('input[name="bookAuthor"]').val('')
+    $('input[name="startTime"]').val('')
+    $('input[name="endTime"]').val('')
+    $('select[name="bookType-section"]').val('')
+    $('select[name="bookPrice-section"]').val('')
+
+}
+
 
 $(function () {
     var picker1 = $('#datetimepicker1').datetimepicker({
